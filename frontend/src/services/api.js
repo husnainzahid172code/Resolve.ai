@@ -1,5 +1,6 @@
 // Thin API client. The admin token lives in sessionStorage; no secrets ever reach the browser.
 const TOKEN_KEY = 'resolveai_admin_token'
+const API_BASE_URL = 'https://resolveai-production-e31d.up.railway.app'
 
 export const tokenStore = {
   get: () => sessionStorage.getItem(TOKEN_KEY),
@@ -13,7 +14,7 @@ async function request(path, { method = 'GET', body, admin = false, headers = {}
   if (admin && tokenStore.get()) h.Authorization = `Bearer ${tokenStore.get()}`
   let res
   try {
-    res = await fetch(`/api${path}`, { method, headers: h, body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined })
+    res = await fetch(`${API_BASE_URL}/api${path}`, { method, headers: h, body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined })
   } catch {
     throw new Error('Cannot reach the ResolveAI server. Is the backend running?')
   }
